@@ -1,0 +1,43 @@
+Algorithm for finding Epsilon-Closure of states in an NFA
+
+1. Data Structures and Initialization
+   1.1. `transition_table[NUM_STATES][NUM_ALPHABETS]`: A 2D array of linked lists to store NFA transitions. Each node in the list contains a destination state.
+   1.2. `e_closure_set[NUM_STATES][NUM_STATES]`: A 2D array to store the resulting e-closure for each state. Initialize with a sentinel value (e.g., -1).
+   1.3. `alphabets[NUM_ALPHABETS]`: An array to store the input alphabets.
+   1.4. `visited[NUM_STATES]`: A temporary buffer/array to keep track of visited states during a single closure calculation.
+
+2. Input Acquisition
+   2.1. Read the number of alphabets and the alphabets themselves. Conventionally, 'e' is used for epsilon and is expected to be the last alphabet if present.
+   2.2. Read the number of states.
+   2.3. Read the number of transitions.
+   2.4. FOR each transition:
+   2.4.1. Read source state, alphabet, and destination state.
+   2.4.2. CALL `insert_transition` to add this to the `transition_table`.
+
+3. Main E-Closure Calculation Loop
+   3.1. FOR each state `i` from 1 to `NUM_STATES`:
+   3.1.1. Reset the `visited` array to all 0s.
+   3.1.2. CALL `find_closure(i, i)` to compute the e-closure of state `i`.
+   3.1.3. CALL `print_closure(i)` to display the result.
+
+4. Recursive Closure Function (`find_closure(current_state, start_state)`)
+   4.1. IF `visited[current_state]` is true, THEN RETURN (to avoid cycles and redundant work).
+   4.2. Add `current_state` to the `e_closure_set` for the `start_state`.
+   4.3. Mark `visited[current_state]` as true.
+   4.4. Check for epsilon transitions from `current_state`.
+   4.5. IF epsilon transitions exist from `current_state`:
+   4.5.1. FOR each state `s` reachable from `current_state` via an epsilon move:
+   4.5.1.1. Recursively CALL `find_closure(s, start_state)`.
+
+5. Helper Functions
+   5.1. `insert_transition(source, alphabet, destination)`:
+   5.1.1. Find the index of the `alphabet`.
+   5.1.2. Create a new node for the `destination` state.
+   5.1.3. Insert the new node at the beginning of the linked list at `transition_table[source][alphabet_index]`.
+   5.2. `print_closure(state)`:
+   5.2.1. Print the opening brace "{".
+   5.2.2. Iterate through `e_closure_set[state]` until the sentinel value is found, printing each state.
+   5.2.3. Print the closing brace "}".
+
+6. Termination
+   6.1. END program.
